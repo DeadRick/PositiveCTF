@@ -7,7 +7,6 @@ import "src/11_DAO/DAO.sol";
 // forge test --match-contract DAOTest -vvvv
 contract DAOTest is BaseTest {
     DAO instance;
-    address owner;
 
     function setUp() public override {
         super.setUp();
@@ -32,7 +31,7 @@ contract DAOTest is BaseTest {
 
     function testExploitLevel() public {
         instance.register();
-        uint256 alicePk = 0x212efffe843107cea143dc42d505a75947aa1be51c18ee473f78781e9270279a;
+        uint256 alicePk = 0x740FEA3982E3E205A04F0021C6F0EE976835157BB7E1CA4BE98B7DF29330A099;
         bytes32 salt = "";
         uint256 value = address(instance).balance;
         bytes32 hash = keccak256(abi.encode(uint8(0x01), value, salt));
@@ -40,12 +39,12 @@ contract DAOTest is BaseTest {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, hash);
         instance.changeDAOowner(v, r, s, salt, address(this));
         instance.withdraw();
-        assertEq(instance.owner(), address(this), "Мы не стали владельцем");
+        assertEq(instance.owner(), address(this), "One");
 
         checkSuccess();
     }
 
     function checkSuccess() internal view override {
-        assertTrue(address(instance).balance == 0, "Решение не решает уровень");
+        assertTrue(address(instance).balance == 0, "One");
     }
 }
